@@ -1,0 +1,13 @@
+{
+  "ignore": [
+    ".env",
+    "node_modules/**",
+    "build/**",
+    "public/**",
+    ".git/**",
+    "**/*.log"
+  ],
+  "watch": ["server.js"],
+  "ext": "js,json",
+  "delay": "2500"
+}

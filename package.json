@@ -1,0 +1,27 @@
+{
+  "dependencies": {
+    "axios": "^1.16.1",
+    "bullmq": "^5.78.0",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "ioredis": "^5.11.0",
+    "mongoose": "^9.6.3",
+    "multer": "^2.1.1",
+    "nodemailer": "^8.0.10",
+    "react-router-dom": "^7.15.1"
+  },
+  "name": "log-sign-page--main",
+  "version": "1.0.0",
+  "description": "A full-stack authentication system with a React frontend and Node.js backends, featuring role-based access control, profile picture uploads, and secure user authentication.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js",
+    "tasks": "node background-tasks/server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs"
+}

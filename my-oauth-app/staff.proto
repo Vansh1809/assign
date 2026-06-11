@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+package staff;
+
+service StaffService {
+  rpc AddStaff (StaffRequest) returns (StaffResponse) {}
+  rpc GetStaff (StaffIdRequest) returns (StaffResponse) {}
+  rpc ListStaff (Empty) returns (StaffListResponse) {}
+  rpc DeleteStaff (StaffIdRequest) returns (StaffResponse) {}
+}
+
+message StaffRequest {
+  string name = 1;
+  string email = 2;
+  string role = 3;
+  string department = 4;
+}
+
+message StaffIdRequest {
+  string id = 1;
+}
+
+message Empty {}
+
+message StaffResponse {
+  bool success = 1;
+  string message = 2;
+  string id = 3;
+  string name = 4;
+}
+
+message StaffListResponse {
+  repeated StaffResponse staff = 1;
+}
