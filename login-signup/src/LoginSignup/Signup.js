@@ -3,6 +3,10 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
 import Navbar from './Navbar';
 
+function Signup() {
+  const navigate = useNavigate();
+  const { signup } = useAuth();
+
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const API_BASE = process.env.REACT_APP_API_BASE_URL || 'http://localhost:5000/api';
 
@@ -25,9 +29,7 @@ const requirements = [
   { label: 'One special character', validator: (pw) => /[^A-Za-z0-9]/.test(pw) },
 ];
 
-function Signup() {
-  const navigate = useNavigate();
-  const { signup } = useAuth();
+
 
   const [formData, setFormData] = useState({ 
     name: '', 
