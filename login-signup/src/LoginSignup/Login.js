@@ -35,8 +35,9 @@ const Login = () => {
 
     setIsLoading(true);
     try {
-      await login(data.email, data.password);
-      navigate('/dashboard');
+      const loggedInUser = await login(data.email, data.password);
+      const roleName = loggedInUser?.role?.name || loggedInUser?.role || '';
+      navigate(roleName.toLowerCase() === 'admin' ? '/dashboard' : '/user-dashboard');
     } catch (error) {
       setMessage(error.message || 'Login failed.');
     } finally {

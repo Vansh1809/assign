@@ -128,7 +128,7 @@ function Signup() {
       data.append('email', formData.email.trim());
       data.append('password', formData.password);
       data.append('roleName', formData.roleName);
-      
+
       if (profilePic) {
         data.append('profilePicture', profilePic);
       }
@@ -138,7 +138,12 @@ function Signup() {
         body: data
       });
 
-      const result = await response.json();
+      let result = null;
+      try {
+        result = await response.json();
+      } catch {
+        result = null;
+      }
 
       if (response.ok) {
         setMessage('Account created successfully. Redirecting...');
@@ -149,10 +154,15 @@ function Signup() {
 
         setTimeout(() => navigate('/login'), 1500);
       } else {
-        setMessage(result.message || 'Signup failed. Please try again.');
+        setMessage(result?.message || 'Signup failed. Please try again.');
       }
     } catch (error) {
-      setMessage(error.message || 'Network error. Please check your connection.');
+      const msg = error?.message || '';
+      if (msg.toLowerCase().includes('failed to fetch')) {
+        setMessage('Unable to connect to server. Please ensure backend is running and the API URL is correct, then try again.');
+      } else {
+        setMessage(error?.message || 'Network error. Please check your connection.');
+      }
     } finally {
       setIsLoading(false);
     }

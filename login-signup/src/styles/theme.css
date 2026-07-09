@@ -1,0 +1,187 @@
+/* ============================================================================
+   UNIFIED ADMIN DASHBOARD DESIGN SYSTEM
+
+   Source of truth for tokens across Admin pages.
+   Updated to match the new Role Management page (AdminRolesPage.jsx + .css)
+   as closely as possible.
+
+   ============================================================================ */
+
+:root {
+  /* COLOR PALETTE (match rm-*) */
+  --ad-primary: #4F46E5;
+  --ad-primary-light: rgba(79, 70, 229, 0.08);
+  --ad-primary-focus: rgba(79, 70, 229, 0.35);
+
+  --ad-success: #16A34A;
+  --ad-success-light: rgba(22, 163, 74, 0.10);
+
+  --ad-danger: #DC2626;
+  --ad-danger-light: rgba(220, 38, 38, 0.10);
+
+  --ad-warning: #F59E0B;
+  --ad-warning-light: rgba(245, 158, 11, 0.08);
+
+  --ad-bg: #F8FAFC;
+  --ad-bg-card: #FFFFFF;
+  --ad-text: #111827;
+  --ad-text-secondary: #374151;
+  --ad-muted: #6B7280;
+  --ad-border: #E5E7EB;
+  --ad-border-dark: rgba(229, 231, 235, 0.9);
+
+  /* TYPOGRAPHY */
+  --ad-font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+
+  --ad-text-h1: 40px;
+  --ad-text-h2: 24px;
+  --ad-text-h3: 18px;
+  --ad-text-body: 16px;
+  --ad-text-sm: 14px;
+  --ad-text-xs: 13px;
+  --ad-text-label: 12px;
+
+  --ad-weight-normal: 400;
+  --ad-weight-medium: 600;
+  --ad-weight-semibold: 700;
+  --ad-weight-bold: 800;
+  --ad-weight-extrabold: 900;
+
+  --ad-lh-tight: 1.1;
+  --ad-lh-normal: 1.55;
+
+  /* SPACING */
+  --ad-space-xs: 6px;
+  --ad-space-sm: 12px;
+  --ad-space-md: 14px;
+  --ad-space-lg: 18px;
+  --ad-space-xl: 20px;
+  --ad-space-2xl: 32px;
+
+  --ad-page-padding: 32px;
+  --ad-max-width: 1400px;
+
+  /* RADIUS */
+  --ad-radius: 14px;
+  --ad-radius-sm: 12px;
+  --ad-radius-lg: 18px;
+  --ad-radius-full: 999px;
+
+  /* SHADOWS */
+  --ad-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+  --ad-shadow-sm: 0 4px 14px rgba(15, 23, 42, 0.08);
+  --ad-shadow-lg: 0 20px 50px rgba(15, 23, 42, 0.12);
+
+  /* TRANSITIONS */
+  --ad-transition-fast: 120ms ease;
+  --ad-transition-normal: 200ms ease;
+  --ad-transition: transform var(--ad-transition-fast),
+                   box-shadow var(--ad-transition-fast),
+                   background var(--ad-transition-fast),
+                   border-color var(--ad-transition-fast),
+                   opacity var(--ad-transition-fast);
+
+  /* Z-INDEX */
+  --ad-z-dropdown: 100;
+  --ad-z-modal-overlay: 200;
+  --ad-z-modal: 210;
+  --ad-z-tooltip: 220;
+
+  /* BREAKPOINTS */
+  --ad-breakpoint-mobile: 640px;
+  --ad-breakpoint-tablet: 901px;
+  --ad-breakpoint-desktop: 1280px;
+}
+
+
+/* ============================================================================
+   GLOBAL STYLES
+   ============================================================================ */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--ad-font-family);
+  color: var(--ad-text);
+  background-color: var(--ad-bg);
+  font-size: var(--ad-text-sm);
+}
+
+/* ============================================================================
+   UTILITY CLASSES
+   ============================================================================ */
+
+.ad-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+.ad-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ad-line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ============================================================================
+   ANIMATION DEFINITIONS
+   ============================================================================ */
+
+@keyframes adShimmer {
+  0% { background-position: 100% 0; }
+  100% { background-position: -100% 0; }
+}
+
+@keyframes adPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+@keyframes adSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* ============================================================================
+   FOCUS STATES (WCAG AA Accessible)
+   ============================================================================ */
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  box-shadow: 0 0 0 4px var(--ad-primary-focus);
+  border-color: var(--ad-primary);
+  outline: none;
+}
+
+/* ============================================================================
+   DARK MODE SUPPORT
+   ============================================================================ */
+
+[data-theme='dark'] {
+  --ad-bg: #0F172A;
+  --ad-bg-card: #1E293B;
+  --ad-text: #F1F5F9;
+  --ad-text-secondary: #CBD5E1;
+  --ad-muted: #94A3B8;
+  --ad-border: #334155;
+  --ad-border-dark: rgba(51, 65, 85, 0.9);
+}

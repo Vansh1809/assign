@@ -1,0 +1,257 @@
+/* ============================================================================
+   ADMIN DASHBOARD - SHARED UTILITIES & LAYOUT PATTERNS
+   ============================================================================ */
+
+/* Import theme */
+@import './theme.css';
+
+/* ============================================================================
+   COMMON ADMIN PAGE PATTERNS
+   ============================================================================ */
+
+.ad-section {
+  background: var(--ad-bg-card);
+  border: 1px solid var(--ad-border);
+  border-radius: var(--ad-radius-lg);
+  box-shadow: var(--ad-shadow-sm);
+  overflow: hidden;
+}
+
+.ad-section--divided {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+}
+
+.ad-section--divided > * + * {
+  border-left: 1px solid var(--ad-border);
+}
+
+/* Header + Body sections */
+.ad-section-header {
+  padding: var(--ad-space-lg);
+  border-bottom: 1px solid var(--ad-border);
+  background: var(--ad-bg-card);
+}
+
+.ad-section-title {
+  font-size: var(--ad-text-h2);
+  font-weight: var(--ad-weight-extrabold);
+  color: var(--ad-text);
+  margin: 0;
+  line-height: var(--ad-lh-tight);
+}
+
+.ad-section-subtitle {
+  font-size: var(--ad-text-sm);
+  color: var(--ad-muted);
+  margin: var(--ad-space-xs) 0 0;
+  font-weight: var(--ad-weight-semibold);
+}
+
+.ad-section-body {
+  padding: var(--ad-space-lg);
+}
+
+.ad-section-footer {
+  padding: var(--ad-space-lg);
+  border-top: 1px solid var(--ad-border);
+  background: var(--ad-bg);
+  display: flex;
+  gap: var(--ad-space-md);
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+
+/* ============================================================================
+   FORM LAYOUTS
+   ============================================================================ */
+
+.ad-form-grid {
+  display: grid;
+  gap: var(--ad-space-lg);
+}
+
+.ad-form-grid--2col {
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: var(--ad-space-lg);
+}
+
+.ad-form-grid--3col {
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--ad-space-lg);
+}
+
+.ad-form-row {
+  display: flex;
+  gap: var(--ad-space-lg);
+  flex-wrap: wrap;
+  align-items: flex-end;
+}
+
+/* ============================================================================
+   STAT / KPI CARDS
+   ============================================================================ */
+
+.ad-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: var(--ad-space-md);
+}
+
+.ad-kpi-card {
+  padding: var(--ad-space-md) var(--ad-space-lg);
+  border: 1px solid var(--ad-border);
+  border-radius: var(--ad-radius-sm);
+  background: var(--ad-bg-card);
+  text-align: center;
+}
+
+.ad-kpi-value {
+  font-size: 20px;
+  font-weight: var(--ad-weight-extrabold);
+  color: var(--ad-primary);
+}
+
+.ad-kpi-label {
+  font-size: var(--ad-text-xs);
+  color: var(--ad-muted);
+  font-weight: var(--ad-weight-extrabold);
+  margin-top: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+/* ============================================================================
+   LIST / ITEM PATTERNS
+   ============================================================================ */
+
+.ad-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.ad-list-item {
+  padding: var(--ad-space-md) var(--ad-space-lg);
+  border-bottom: 1px solid var(--ad-border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--ad-space-lg);
+}
+
+.ad-list-item:last-child {
+  border-bottom: none;
+}
+
+.ad-list-item--hover:hover {
+  background: rgba(79, 70, 229, 0.04);
+}
+
+/* ============================================================================
+   GRID LAYOUTS
+   ============================================================================ */
+
+.ad-dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--ad-space-xl);
+}
+
+.ad-dashboard-grid--2 {
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+}
+
+.ad-dashboard-grid--3 {
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+}
+
+.ad-dashboard-grid--4 {
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+
+.ad-col-span-2 {
+  grid-column: span 2;
+}
+
+.ad-col-full {
+  grid-column: 1 / -1;
+}
+
+/* ============================================================================
+   ALERT & MESSAGE PATTERNS
+   ============================================================================ */
+
+.ad-alert {
+  padding: var(--ad-space-lg);
+  border-radius: var(--ad-radius-sm);
+  border: 1px solid;
+  display: flex;
+  gap: var(--ad-space-md);
+  align-items: flex-start;
+}
+
+.ad-alert--success {
+  border-color: rgba(22, 163, 74, 0.35);
+  background: var(--ad-success-light);
+  color: var(--ad-success);
+}
+
+.ad-alert--error {
+  border-color: rgba(220, 38, 38, 0.25);
+  background: rgba(220, 38, 38, 0.08);
+  color: #991b1b;
+}
+
+.ad-alert--warning {
+  border-color: rgba(245, 158, 11, 0.45);
+  background: var(--ad-warning-light);
+  color: #9a3412;
+}
+
+.ad-alert--info {
+  border-color: rgba(79, 70, 229, 0.35);
+  background: var(--ad-primary-light);
+  color: var(--ad-primary);
+}
+
+.ad-alert-title {
+  font-weight: var(--ad-weight-bold);
+}
+
+.ad-alert-message {
+  font-size: var(--ad-text-sm);
+  line-height: var(--ad-lh-normal);
+}
+
+/* ============================================================================
+   RESPONSIVE GRID ADJUSTMENTS
+   ============================================================================ */
+
+@media (max-width: 900px) {
+  .ad-section--divided {
+    grid-template-columns: 1fr;
+  }
+
+  .ad-section--divided > * + * {
+    border-left: none;
+    border-top: 1px solid var(--ad-border);
+  }
+
+  .ad-form-grid--2col,
+  .ad-form-grid--3col {
+    grid-template-columns: 1fr;
+  }
+
+  .ad-dashboard-grid,
+  .ad-dashboard-grid--2,
+  .ad-dashboard-grid--3,
+  .ad-dashboard-grid--4 {
+    grid-template-columns: 1fr;
+  }
+
+  .ad-col-span-2 {
+    grid-column: span 1;
+  }
+}

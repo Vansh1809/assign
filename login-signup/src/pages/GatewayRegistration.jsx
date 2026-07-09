@@ -1,22 +1,42 @@
-import React, { useState } from "react";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+
+import AdminLayout from '../Components/AdminLayout';
+import { AdminPageLayout, Button, Card } from '../Components/ui';
+
+import { useAuth } from '../AuthContext';
+
+import './GatewayRegistration.css';
+
+const API_BASE_RAW = process.env.REACT_APP_API_BASE_URL;
+
+// Smart base URL: avoid double `/api`.
+// - if env already ends with `/api`, use it
+// - otherwise append `/api`
+const API_BASE = (() => {
+  const fallback = 'http://localhost:5000/api';
+  const raw = (API_BASE_RAW && String(API_BASE_RAW).trim()) || fallback;
+  const trimmed = raw.replace(/\/+$/, '');
+  return trimmed.toLowerCase().endsWith('/api') ? trimmed : `${trimmed}/api`;
+})();
 
 function GatewayRegistration() {
   const navigate = useNavigate();
-  const [gatewayId, setGatewayId] = useState("");
-  const [name, setName] = useState("");
-  const [frequencyPlan, setFrequencyPlan] = useState("EU_863_870");
+  const { user, token } = useAuth();
 
-  // Backend requires EUI (hex string) -> maps to `eui`
-  const [gatewayEui, setGatewayEui] = useState("");
-  const [description, setDescription] = useState("");
+  const [gatewayId, setGatewayId] = useState('');
+  const [name, setName] = useState('');
+  const [frequencyPlan, setFrequencyPlan] = useState('EU_863_870');
+  const [gatewayEui, setGatewayEui] = useState('');
+  const [description, setDescription] = useState('');
+  const [message, setMessage] = useState('');
 
-  // gateway_server_address + antennas are handled by the backend (defaults/env).
-
+  const roleName = user?.role?.name || user?.role || '';
+  const homeRoute = roleName.toLowerCase() === 'admin' ? '/dashboard' : '/user-dashboard';
 
   const goToDevices = (gatewayOverride = {}) => {
-    navigate("/devices", {
+    navigate('/devices', {
       state: {
         gateway: {
           gatewayId,
@@ -30,6 +50,8 @@ function GatewayRegistration() {
   };
 
   const registerGateway = async () => {
+    setMessage('');
+
     try {
       const payload = {
         gateway_id: gatewayId,
@@ -37,33 +59,24 @@ function GatewayRegistration() {
         name,
         description,
         frequency_plan_ids: frequencyPlan ? [frequencyPlan] : [],
-
-
-        // optional booleans
         status_public: true,
         location_public: true,
-
       };
 
-      const response = await axios.post(
-        "http://localhost:5001/api/gateway/register",
-        payload,
-        {
-          headers: {
-            "Content-Type": "application/json"
-          },
-          timeout: 15000
-        }
-      );
+      await axios.post(`${API_BASE}/gateway/register`, payload, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        timeout: 15000,
+      });
 
-      alert("Gateway Registered Successfully");
-      console.log(response.data);
+      setMessage('Gateway registered successfully.');
       goToDevices();
     } catch (error) {
-      console.error(error);
       const data = error.response?.data;
 
-      if (data?.code === "gateway_eui_taken") {
+      if (data?.code === 'gateway_eui_taken') {
         const shouldContinue = window.confirm(
           `${data.message}\n\nContinue adding badges/devices for "${data.existingGatewayId}"?`
         );
@@ -85,78 +98,180 @@ function GatewayRegistration() {
         data?.error?.message ||
         data?.message ||
         error.message;
-      alert(`Gateway Registration Failed: ${errorMsg}`);
+
+      setMessage(`Gateway registration failed: ${errorMsg}`);
     }
   };
 
-  return (
-    <div>
-      <h2>Register Gateway</h2>
-
-      <input
-        type="text"
-        placeholder="Gateway ID"
-        value={gatewayId}
-        onChange={(e) => setGatewayId(e.target.value)}
-      />
-
-      <br /><br />
-
-      <label>
-        Frequency Plan:
-        <select
-          value={frequencyPlan}
-          onChange={(e) => setFrequencyPlan(e.target.value)}
-          style={{ marginLeft: '8px' }}
-        >
-          <option value="EU_863_870">EU_863_870</option>
-          <option value="IN_865_867">IN_865_867</option>
-          <option value="US_902_928">US_902_928</option>
-          <option value="AS_923_924">AS_923_924</option>
-        </select>
-      </label>
-
-      <br /><br />
-
-      <input
-        type="text"
-        placeholder="Gateway EUI (hex string required)"
-        value={gatewayEui}
-        onChange={(e) => setGatewayEui(e.target.value)}
-      />
-
-      <br /><br />
-
-      <input
-        type="text"
-        placeholder="Gateway Name"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-      />
-
-      <br /><br />
-
-      <input
-        type="text"
-        placeholder="Description (optional)"
-        value={description}
-        onChange={(e) => setDescription(e.target.value)}
-      />
-
-      <br /><br />
-
-      <button onClick={registerGateway}>Register Gateway</button>
-
-      <button
-        type="button"
+return (
+  <AdminLayout
+    title="Register Gateway"
+    subtitle="Create a gateway entry, then continue into badge and device setup."
+    action={
+      <Button
+        variant="secondary"
+        size="md"
         onClick={() => goToDevices()}
-        style={{ marginLeft: "12px" }}
       >
         Add Badges / Devices
-      </button>
+      </Button>
+    }
+  >
+    <AdminPageLayout>
+      <div className="register-gateway-page">
 
-    </div>
-  );
+        {message && (
+          <div className="gateway-notice">
+            {message}
+          </div>
+        )}
+
+        <div className="ad-grid-cols-2">
+
+          {/* Left Card */}
+
+          <Card className="ad-page-section-card">
+
+            <div className="ad-card-header">
+              <h2>Gateway Details</h2>
+            </div>
+
+            <div className="ad-card-body">
+
+              <div className="gateway-form-grid">
+
+                <label>
+                  Gateway ID
+                  <input
+                    type="text"
+                    value={gatewayId}
+                    placeholder="gateway-001"
+                    onChange={(e) => setGatewayId(e.target.value)}
+                  />
+                </label>
+
+                <label>
+                  Frequency Plan
+                  <select
+                    value={frequencyPlan}
+                    onChange={(e) =>
+                      setFrequencyPlan(e.target.value)
+                    }
+                  >
+                    <option value="EU_863_870">EU_863_870</option>
+                    <option value="IN_865_867">IN_865_867</option>
+                    <option value="US_902_928">US_902_928</option>
+                    <option value="AS_923_924">AS_923_924</option>
+                  </select>
+                </label>
+
+                <label>
+                  Gateway EUI
+                  <input
+                    type="text"
+                    value={gatewayEui}
+                    placeholder="16 hex characters"
+                    onChange={(e) =>
+                      setGatewayEui(e.target.value)
+                    }
+                  />
+                </label>
+
+                <label>
+                  Gateway Name
+                  <input
+                    type="text"
+                    value={name}
+                    placeholder="Main Office Gateway"
+                    onChange={(e) =>
+                      setName(e.target.value)
+                    }
+                  />
+                </label>
+
+                <label className="gateway-wide-field">
+                  Description
+                  <input
+                    type="text"
+                    value={description}
+                    placeholder="Optional Notes"
+                    onChange={(e) =>
+                      setDescription(e.target.value)
+                    }
+                  />
+                </label>
+
+                <div className="gateway-actions">
+
+                  <Button onClick={registerGateway}>
+                    Register Gateway
+                  </Button>
+
+                  <Button
+                    variant="secondary"
+                    onClick={() => goToDevices()}
+                  >
+                    Add Badges / Devices
+                  </Button>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          </Card>
+
+          {/* Right Card */}
+
+          <Card className="ad-page-section-card">
+
+            <div className="ad-card-header">
+              <h2>Setup Checklist</h2>
+            </div>
+
+            <div className="ad-card-body">
+
+              <div className="user-workflow">
+
+                <div>
+                  <strong>1</strong>
+                  <span>Enter Gateway ID</span>
+                </div>
+
+                <div>
+                  <strong>2</strong>
+                  <span>Enter Gateway EUI</span>
+                </div>
+
+                <div>
+                  <strong>3</strong>
+                  <span>Select Frequency Plan</span>
+                </div>
+
+                <div>
+                  <strong>4</strong>
+                  <span>Register Gateway</span>
+                </div>
+
+                <div>
+                  <strong>5</strong>
+                  <span>Add Devices</span>
+                </div>
+
+              </div>
+
+            </div>
+
+          </Card>
+
+        </div>
+
+      </div>
+    </AdminPageLayout>
+  </AdminLayout>
+);
 }
 
 export default GatewayRegistration;
+

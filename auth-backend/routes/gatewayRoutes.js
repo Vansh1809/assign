@@ -1,11 +1,12 @@
 const express = require("express");
 const router = express.Router();
 
-const gatewayController =
-require("../controllers/gatewayController");
+const { requireAdmin } = require('../middleware/adminGuard');
+const gatewayController = require("../controllers/gatewayController");
 
 router.post(
   "/register",
+  requireAdmin,
   gatewayController.registerGateway
 );
 

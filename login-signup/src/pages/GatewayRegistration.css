@@ -1,0 +1,153 @@
+/* ===============================
+   Gateway Registration Page
+   =============================== */
+
+.register-gateway-page {
+  width: 100%;
+  padding: 24px;
+  display: block;
+}
+
+/* Main Layout */
+.register-gateway-page .ad-grid-cols-2 {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+/* Cards */
+.register-gateway-page .ad-page-section-card {
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  height: auto;
+}
+
+/* Card Header */
+.register-gateway-page .ad-card-header {
+  padding: 18px 24px;
+  border-bottom: 1px solid #ececec;
+}
+
+.register-gateway-page .ad-card-header h2 {
+  margin: 0;
+  font-size: 18px;
+  color: #111827;
+}
+
+/* Card Body */
+.register-gateway-page .ad-card-body {
+  padding: 24px;
+}
+
+/* ===============================
+   Form
+   =============================== */
+
+.gateway-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.gateway-form-grid label {
+  display: flex;
+  flex-direction: column;
+  font-weight: 600;
+  color: #374151;
+  font-size: 14px;
+}
+
+.gateway-form-grid input,
+.gateway-form-grid select {
+  width: 100%;
+  margin-top: 8px;
+  padding: 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #111827;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.gateway-form-grid input:focus,
+.gateway-form-grid select:focus {
+  border-color: #4f46e5;
+}
+
+/* Full Width Field */
+
+.gateway-wide-field {
+  grid-column: 1 / -1;
+}
+
+/* Buttons */
+
+.gateway-actions {
+  grid-column: 1 / -1;
+  display: flex;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+/* Notice */
+
+.gateway-notice {
+  margin-bottom: 20px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  background: #eef6ff;
+  color: #0f172a;
+  border: 1px solid #bfdbfe;
+}
+
+/* Checklist */
+
+.user-workflow {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.user-workflow div {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.user-workflow strong {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #2563eb;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.user-workflow span {
+  color: #374151;
+}
+
+/* Responsive */
+
+@media (max-width: 900px) {
+  .register-gateway-page .ad-grid-cols-2 {
+    grid-template-columns: 1fr;
+  }
+
+  .gateway-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .gateway-wide-field,
+  .gateway-actions {
+    grid-column: auto;
+  }
+}

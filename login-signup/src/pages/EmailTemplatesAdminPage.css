@@ -1,0 +1,181 @@
+/* ============================================================================
+   EMAIL TEMPLATES ADMIN PAGE STYLES
+   ============================================================================ */
+
+/* Form Label */
+.ad-form-label {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ad-space-xs);
+}
+
+.ad-form-label-text {
+  font-size: var(--ad-text-xs);
+  font-weight: var(--ad-weight-extrabold);
+  color: var(--ad-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+/* Form Select */
+.ad-form-select {
+  border: 1px solid var(--ad-border);
+  border-radius: var(--ad-radius-sm);
+  padding: 12px 14px;
+  background: var(--ad-bg-card);
+  color: var(--ad-text);
+  font-weight: var(--ad-weight-bold);
+  font-size: var(--ad-text-sm);
+  font-family: var(--ad-font-family);
+  cursor: pointer;
+  transition: var(--ad-transition);
+}
+
+.ad-form-select:focus {
+  border-color: var(--ad-primary);
+  box-shadow: 0 0 0 4px var(--ad-primary-focus);
+  outline: none;
+}
+
+.ad-form-select:hover {
+  border-color: var(--ad-primary);
+}
+
+/* Form Actions */
+.ad-form-actions {
+  display: flex;
+  gap: var(--ad-space-md);
+  justify-content: flex-end;
+  margin-top: var(--ad-space-xl);
+  flex-wrap: wrap;
+}
+
+/* Toast Notification */
+.ad-toast {
+  padding: var(--ad-space-md) var(--ad-space-lg);
+  border-radius: var(--ad-radius-sm);
+  display: flex;
+  align-items: center;
+  gap: var(--ad-space-md);
+  margin-top: var(--ad-space-lg);
+  font-weight: var(--ad-weight-bold);
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.ad-toast--success {
+  border: 1px solid rgba(22, 163, 74, 0.35);
+  background: var(--ad-success-light);
+  color: var(--ad-success);
+}
+
+/* Card Styles for Form */
+.ad-card-header {
+  padding: var(--ad-space-lg);
+  border-bottom: 1px solid var(--ad-border);
+}
+
+.ad-card-body {
+  padding: var(--ad-space-lg);
+}
+
+.ad-card-title {
+  font-size: var(--ad-text-h3);
+  font-weight: var(--ad-weight-extrabold);
+  color: var(--ad-text);
+  margin: 0;
+}
+
+.ad-card-subtitle {
+  font-size: var(--ad-text-xs);
+  color: var(--ad-muted);
+  margin: var(--ad-space-xs) 0 0;
+  font-family: monospace;
+  font-weight: var(--ad-weight-semibold);
+}
+
+/* Template Info Display */
+.ad-template-info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ad-space-lg);
+}
+
+.ad-template-row {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--ad-space-lg);
+  padding: var(--ad-space-md) 0;
+  border-bottom: 1px solid var(--ad-border);
+}
+
+.ad-template-row:last-child {
+  border-bottom: none;
+}
+
+.ad-template-label {
+  font-weight: var(--ad-weight-extrabold);
+  color: var(--ad-muted);
+  font-size: var(--ad-text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  min-width: 120px;
+}
+
+.ad-template-value {
+  font-weight: var(--ad-weight-bold);
+  color: var(--ad-text);
+  font-size: var(--ad-text-sm);
+}
+
+.ad-template-fields {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ad-space-sm);
+}
+
+.ad-template-field {
+  background: var(--ad-primary-light);
+  border: 1px solid rgba(79, 70, 229, 0.35);
+  color: var(--ad-primary);
+  padding: 4px 12px;
+  border-radius: var(--ad-radius-full);
+  font-size: var(--ad-text-xs);
+  font-weight: var(--ad-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .ad-form-grid--2col {
+    grid-template-columns: 1fr;
+  }
+
+  .ad-form-actions {
+    justify-content: stretch;
+  }
+
+  .ad-form-actions > * {
+    flex: 1;
+  }
+
+  .ad-template-row {
+    flex-direction: column;
+    gap: var(--ad-space-sm);
+  }
+
+  .ad-template-label {
+    min-width: auto;
+  }
+}

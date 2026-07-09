@@ -1,7 +1,17 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 
 const AuthContext = createContext(null);
 const API_BASE = process.env.REACT_APP_API_BASE_URL || 'http://localhost:5000/api';
+
+const toNetworkErrorMessage = (err) => {
+  // fetch/axios “Failed to fetch” -> browser network error (no HTTP response)
+  const message = err?.message || '';
+  if (message.toLowerCase().includes('failed to fetch')) {
+    return 'Unable to connect to server. Please ensure the backend is running and CORS/URL/port are correct, then try again.';
+  }
+  return 'Unable to connect to server. Please try again.';
+};
+
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(() => {
@@ -23,12 +33,14 @@ export function AuthProvider({ children }) {
   // ✅ NEW: Check if user is authenticated
   const isAuthenticated = !!user && !!token;
 
-  // ✅ NEW: Check if user is admin (support role as string or object)
+  // ✅ Check if user is admin (support backend RBAC: "admin" and "super admin")
   const isAdmin = (() => {
     const role = user?.role;
     const roleName = typeof role === 'string' ? role : role?.name;
-    return (roleName || '').toLowerCase() === 'admin';
+    const normalized = (roleName || '').toString().trim().toLowerCase();
+    return normalized === 'admin' || normalized === 'super admin';
   })();
+
 
 
   const saveUser = (value) => {
@@ -41,37 +53,64 @@ export function AuthProvider({ children }) {
   };
 
   const login = async (email, password) => {
-    const response = await fetch(`${API_BASE}/login`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password })
-    });
-    const data = await response.json();
+    let response;
+    try {
+      response = await fetch(`${API_BASE}/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+    } catch (err) {
+      throw new Error(toNetworkErrorMessage(err));
+    }
+
+    let data = null;
+    try {
+      data = await response.json();
+    } catch {
+      // backend might not respond with JSON
+      data = null;
+    }
+
     if (!response.ok) {
-      throw new Error(data.message || 'Login failed.');
+      throw new Error(data?.message || 'Login failed.');
     }
 
     // Backend returns { token, user }
-    if (data.token) {
+    if (data?.token) {
       setToken(data.token);
       localStorage.setItem('authToken', data.token);
     }
 
-    saveUser(data.user);
-    return data.user;
+    saveUser(data?.user || null);
+    return data?.user;
   };
 
+  // NOTE: signup with profile picture is handled by LoginSignup/Signup.js (multipart/form-data).
+  // This method is kept for compatibility (no profilePicture).
   const signup = async (name, email, password) => {
-    const response = await fetch(`${API_BASE}/signup`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, email, password })
-    });
-    const data = await response.json();
-    if (!response.ok) {
-      throw new Error(data.message || 'Signup failed.');
+    let response;
+    try {
+      response = await fetch(`${API_BASE}/signup`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, password })
+      });
+    } catch (err) {
+      throw new Error(toNetworkErrorMessage(err));
     }
-    return data.message;
+
+    let data = null;
+    try {
+      data = await response.json();
+    } catch {
+      data = null;
+    }
+
+    if (!response.ok) {
+      throw new Error(data?.message || 'Signup failed.');
+    }
+    return data?.message;
   };
 
   const logout = () => {

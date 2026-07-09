@@ -1,0 +1,74 @@
+/* ============================================================================
+   PAGINATION COMPONENT STYLES
+   ============================================================================ */
+
+.ad-pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--ad-space-lg);
+  padding: 14px 18px;
+  border-top: 1px solid rgba(229, 231, 235, 0.85);
+  background: var(--ad-bg-card);
+}
+
+.ad-pagination__meta {
+  color: var(--ad-muted);
+  font-size: var(--ad-text-xs);
+  font-weight: var(--ad-weight-extrabold);
+}
+
+.ad-pagination__controls {
+  display: flex;
+  align-items: center;
+  gap: var(--ad-space-lg);
+}
+
+.ad-pagination__btn {
+  border: 1px solid var(--ad-border);
+  background: var(--ad-bg-card);
+  padding: 8px 12px;
+  border-radius: var(--ad-radius-sm);
+  font-weight: var(--ad-weight-bold);
+  cursor: pointer;
+  font-size: var(--ad-text-xs);
+  color: var(--ad-text);
+  transition: var(--ad-transition);
+}
+
+.ad-pagination__btn:hover:not(:disabled) {
+  background: rgba(79, 70, 229, 0.04);
+  border-color: var(--ad-primary);
+  color: var(--ad-primary);
+  transform: translateY(-1px);
+}
+
+.ad-pagination__btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.ad-pagination__info {
+  color: var(--ad-muted);
+  font-size: var(--ad-text-xs);
+  font-weight: var(--ad-weight-bold);
+  white-space: nowrap;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .ad-pagination {
+    flex-direction: column;
+    gap: var(--ad-space-md);
+  }
+
+  .ad-pagination__meta {
+    order: 2;
+  }
+
+  .ad-pagination__controls {
+    order: 1;
+    width: 100%;
+    justify-content: space-between;
+  }
+}

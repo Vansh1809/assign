@@ -1,0 +1,352 @@
+import React, { useEffect, useMemo, useState } from 'react';
+import { useAuth } from '../AuthContext';
+import AdminLayout from '../Components/AdminLayout';
+import {
+  AdminPageLayout,
+  Button,
+  FormField,
+  TextArea,
+  Card,
+  PageHeader,
+} from '../components/ui';
+import '../styles/theme.css';
+import './EmailTemplatesAdminPage.css';
+
+const API_BASE = process.env.REACT_APP_TASKS_API_BASE || 'http://localhost:4000';
+
+function templateConfig(template) {
+  if (template === 'welcome') {
+    return {
+      title: 'Welcome Email',
+      subject: 'Welcome to {{siteName}}!',
+      fields: ['name', 'siteName', 'username', 'password'],
+      type: 'send-email',
+      payloadTemplateKey: 'welcome',
+    };
+  }
+
+  if (template === 'forgotPassword') {
+    return {
+      title: 'Forgot Password Email',
+      subject: 'Reset your password',
+      fields: ['name', 'siteName', 'resetLink'],
+      type: 'send-email',
+      payloadTemplateKey: 'forgotPassword',
+    };
+  }
+
+  if (template === 'reminder') {
+    return {
+      title: 'Daily Reminder Email',
+      subject: 'Reminder from {{siteName}}',
+      fields: ['message', 'siteName', 'name'],
+      type: 'send-email',
+      payloadTemplateKey: 'reminder',
+    };
+  }
+
+  return null;
+}
+
+export default function EmailTemplatesAdminPage() {
+  const { token } = useAuth();
+
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [toast, setToast] = useState(null);
+
+  const [templateType, setTemplateType] = useState('welcome');
+  const cfg = useMemo(() => templateConfig(templateType), [templateType]);
+
+  const [toEmail, setToEmail] = useState('');
+  const [name, setName] = useState('');
+  const [siteName, setSiteName] = useState('GeoBoard');
+  const [resetLink, setResetLink] = useState('');
+  const [message, setMessage] = useState('This is your scheduled reminder.');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+
+  const resetForm = () => {
+    setToEmail('');
+    setName('');
+    setSiteName('GeoBoard');
+    setResetLink('');
+    setMessage('This is your scheduled reminder.');
+    setUsername('');
+    setPassword('');
+  };
+
+  useEffect(() => {
+    resetForm();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [templateType]);
+
+  const availableTemplateTypes = ['welcome', 'forgotPassword', 'reminder'];
+
+  const canSend = useMemo(() => {
+    if (!cfg) return false;
+    if (!toEmail.trim()) return false;
+
+    const required = cfg.fields;
+    for (const f of required) {
+      if (f === 'name' && !name.trim()) return false;
+      if (f === 'siteName' && !siteName.trim()) return false;
+      if (f === 'resetLink' && !resetLink.trim()) return false;
+      if (f === 'message' && !message.trim()) return false;
+      if (f === 'username' && !username.trim()) return false;
+      if (f === 'password' && !password.trim()) return false;
+    }
+
+    return true;
+  }, [cfg, toEmail, name, siteName, resetLink, message, username, password]);
+
+  const sendNow = async (e) => {
+    e.preventDefault();
+    if (!canSend) return;
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      const templateData = {
+        name,
+        siteName,
+        message,
+        username: username || undefined,
+        password: password || undefined,
+      };
+
+      if (templateType === 'forgotPassword') {
+        templateData.resetLink = resetLink;
+      }
+
+      const res = await fetch(`${API_BASE}/tasks`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+        body: JSON.stringify({
+          type: 'send-email',
+          payload: {
+            email: toEmail,
+            template: cfg.payloadTemplateKey,
+            templateData,
+          },
+        }),
+      });
+
+      const contentType = res.headers.get('content-type') || '';
+      const isJson = contentType.includes('application/json');
+      const data = isJson ? await res.json() : { raw: await res.text() };
+
+      if (res.status === 404) {
+        throw new Error('Failed to fetch: Server endpoint not found (404)');
+      }
+
+      if (!res.ok || !data.id) {
+        const msg = data?.error || data?.message || (data?.raw ? String(data.raw).slice(0, 500) : null);
+        throw new Error(msg || 'Failed to queue email');
+      }
+
+      setToast(`Queued: ${data.id}`);
+      resetForm();
+    } catch (err) {
+      if (err.message.includes('Failed to fetch') || err.message.includes('blocked by CORS')) {
+        setError(
+          'CORS Error: The background service at port 4000 must allow origin http://localhost:3000'
+        );
+      } else {
+        setError(err.message || 'Failed to queue');
+      }
+    } finally {
+      setLoading(false);
+      setTimeout(() => setToast(null), 2500);
+    }
+  };
+
+  return (
+    <AdminLayout>
+      <AdminPageLayout>
+        {/* Page Header */}
+        <PageHeader
+          title="Email Templates"
+          subtitle="Send test emails and queue templates for users."
+        />
+
+        {/* Main Form Card */}
+        <Card>
+          {/* Form Header */}
+          <div className="ad-card-header">
+            <h2 className="ad-card-title">Queue an Email</h2>
+            <p className="ad-card-subtitle">Endpoint: {API_BASE}/tasks</p>
+          </div>
+
+          {/* Form Body */}
+          <form onSubmit={sendNow} className="ad-card-body">
+            <div className="ad-form-grid ad-form-grid--2col">
+              {/* Template Selection */}
+              <div>
+                <label className="ad-form-label">
+                  <span className="ad-form-label-text">Email Template</span>
+                  <select
+                    value={templateType}
+                    onChange={(e) => setTemplateType(e.target.value)}
+                    className="ad-form-select"
+                  >
+                    {availableTemplateTypes.map((t) => (
+                      <option key={t} value={t}>
+                        {templateConfig(t).title}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              </div>
+
+              {/* Recipient Email */}
+              <FormField
+                label="Send to (Email)"
+                type="email"
+                value={toEmail}
+                onChange={setToEmail}
+                placeholder="recipient@example.com"
+                required
+              />
+
+              {/* Name */}
+              <FormField
+                label="Recipient Name"
+                type="text"
+                value={name}
+                onChange={setName}
+                placeholder="John Doe"
+                required
+              />
+
+              {/* Site Name */}
+              <FormField
+                label="Site Name"
+                type="text"
+                value={siteName}
+                onChange={setSiteName}
+                placeholder="My App"
+                required
+              />
+
+              {/* Password Fields for Welcome Template */}
+              {templateType === 'welcome' && (
+                <>
+                  <FormField
+                    label="Username"
+                    type="text"
+                    value={username}
+                    onChange={setUsername}
+                    placeholder="john_doe"
+                    required
+                  />
+                  <FormField
+                    label="Password"
+                    type="password"
+                    value={password}
+                    onChange={setPassword}
+                    placeholder="••••••••"
+                    required
+                  />
+                </>
+              )}
+
+              {/* Reset Link for Forgot Password */}
+              {templateType === 'forgotPassword' && (
+                <FormField
+                  label="Reset Link"
+                  type="url"
+                  value={resetLink}
+                  onChange={setResetLink}
+                  placeholder="https://app.example.com/reset?token=..."
+                  required
+                />
+              )}
+            </div>
+
+            {/* Message for Reminder */}
+            {templateType === 'reminder' && (
+              <div style={{ marginTop: 'var(--ad-space-lg)' }}>
+                <TextArea
+                  label="Reminder Message"
+                  value={message}
+                  onChange={setMessage}
+                  placeholder="Enter your reminder message..."
+                  required
+                  rows={4}
+                />
+              </div>
+            )}
+
+            {/* Error Alert */}
+            {error && (
+              <div className="ad-alert ad-alert--error" style={{ marginTop: 'var(--ad-space-lg)' }}>
+                <span className="ad-alert-title">Error:</span>
+                <span className="ad-alert-message">{error}</span>
+              </div>
+            )}
+
+            {/* Success Toast */}
+            {toast && (
+              <div className="ad-toast ad-toast--success">
+                <span>✓ {toast}</span>
+              </div>
+            )}
+
+            {/* Form Actions */}
+            <div className="ad-form-actions">
+              <Button
+                variant="secondary"
+                onClick={resetForm}
+                disabled={loading}
+              >
+                Reset
+              </Button>
+              <Button
+                variant="primary"
+                type="submit"
+                disabled={!canSend || loading}
+                loading={loading}
+              >
+                {loading ? 'Sending...' : 'Send Email'}
+              </Button>
+            </div>
+          </form>
+        </Card>
+
+        {/* Template Preview Card */}
+        <Card>
+          <div className="ad-card-header">
+            <h3 className="ad-card-title">Template Info</h3>
+          </div>
+          <div className="ad-card-body">
+            <div className="ad-template-info">
+              <div className="ad-template-row">
+                <span className="ad-template-label">Type:</span>
+                <span className="ad-template-value">{cfg.title}</span>
+              </div>
+              <div className="ad-template-row">
+                <span className="ad-template-label">Subject:</span>
+                <span className="ad-template-value">{cfg.subject}</span>
+              </div>
+              <div className="ad-template-row">
+                <span className="ad-template-label">Required Fields:</span>
+                <div className="ad-template-fields">
+                  {cfg.fields.map((f) => (
+                    <span key={f} className="ad-template-field">
+                      {f}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </Card>
+      </AdminPageLayout>
+    </AdminLayout>
+  );
+}

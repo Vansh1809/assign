@@ -1,0 +1,140 @@
+/* ============================================================================
+   ADMIN PAGE LAYOUT COMPONENT STYLES
+   ============================================================================ */
+
+.ad-admin-page {
+  padding: var(--ad-page-padding);
+  background: var(--ad-bg);
+  min-height: 100%;
+}
+
+.ad-admin-page__container {
+  width: 100%;
+  max-width: var(--ad-max-width);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--ad-space-xl);
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .ad-admin-page {
+    padding: var(--ad-space-lg);
+  }
+
+  .ad-admin-page__container {
+    gap: var(--ad-space-lg);
+  }
+}
+
+@media (max-width: 640px) {
+  .ad-admin-page {
+    padding: var(--ad-space-md);
+  }
+
+  .ad-admin-page__container {
+    gap: var(--ad-space-md);
+  }
+}
+
+/* ============================================================================
+   CONTENT SECTIONS
+   ============================================================================ */
+
+.ad-page-section {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--ad-space-xl);
+}
+
+.ad-page-section-card {
+  background: var(--ad-bg-card);
+  border: 1px solid var(--ad-border);
+  border-radius: var(--ad-radius-lg);
+  box-shadow: var(--ad-shadow-sm);
+  overflow: hidden;
+}
+
+.ad-page-section-header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ad-space-md);
+  padding: var(--ad-space-lg);
+  border-bottom: 1px solid var(--ad-border);
+}
+
+.ad-page-section-body {
+  padding: var(--ad-space-lg);
+}
+
+.ad-page-section-footer {
+  padding: var(--ad-space-lg);
+  border-top: 1px solid var(--ad-border);
+  display: flex;
+  gap: var(--ad-space-md);
+  justify-content: flex-end;
+}
+
+/* ============================================================================
+   GRID LAYOUTS
+   ============================================================================ */
+
+.ad-grid-cols-2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--ad-space-xl);
+}
+
+.ad-grid-cols-3 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--ad-space-xl);
+}
+
+.ad-grid-cols-4 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--ad-space-xl);
+}
+
+/* ============================================================================
+   STAT CARDS
+   ============================================================================ */
+
+.ad-stat-card {
+  background: var(--ad-bg-card);
+  border: 1px solid var(--ad-border);
+  border-radius: var(--ad-radius-lg);
+  padding: var(--ad-space-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--ad-space-md);
+}
+
+.ad-stat-card__value {
+  font-size: 32px;
+  font-weight: var(--ad-weight-extrabold);
+  color: var(--ad-text);
+}
+
+.ad-stat-card__label {
+  font-size: var(--ad-text-xs);
+  color: var(--ad-muted);
+  font-weight: var(--ad-weight-extrabold);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.ad-stat-card__change {
+  font-size: var(--ad-text-xs);
+  font-weight: var(--ad-weight-bold);
+}
+
+.ad-stat-card__change--positive {
+  color: var(--ad-success);
+}
+
+.ad-stat-card__change--negative {
+  color: var(--ad-danger);
+}

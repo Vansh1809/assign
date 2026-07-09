@@ -1,0 +1,138 @@
+/* ============================================================================
+   BUTTON COMPONENT STYLES
+   ============================================================================ */
+
+.ad-btn {
+  border: 1px solid var(--ad-border);
+  background: var(--ad-bg-card);
+  padding: 10px 14px;
+  border-radius: var(--ad-radius-sm);
+  font-weight: var(--ad-weight-extrabold);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ad-space-md);
+  color: var(--ad-text);
+  transition: var(--ad-transition);
+  font-size: var(--ad-text-sm);
+  font-family: var(--ad-font-family);
+}
+
+.ad-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: var(--ad-shadow-sm);
+}
+
+.ad-btn:disabled,
+.ad-btn[aria-disabled='true'] {
+  cursor: not-allowed;
+  opacity: 0.6;
+  transform: none;
+  box-shadow: none;
+}
+
+.ad-btn:focus-visible {
+  box-shadow: 0 0 0 4px var(--ad-primary-focus);
+  border-color: var(--ad-primary);
+  outline: none;
+}
+
+/* ============================================================================
+   BUTTON VARIANTS
+   ============================================================================ */
+
+/* Primary Button */
+.ad-btn--primary {
+  background: var(--ad-primary);
+  border-color: transparent;
+  color: #fff;
+}
+
+.ad-btn--primary:hover:not(:disabled) {
+  background: linear-gradient(135deg, var(--ad-primary) 0%, #3b36c9 100%);
+}
+
+/* Success Button */
+.ad-btn--success {
+  background: var(--ad-success);
+  border-color: transparent;
+  color: #fff;
+}
+
+.ad-btn--success:hover:not(:disabled) {
+  background: linear-gradient(135deg, var(--ad-success) 0%, #139640 100%);
+}
+
+/* Danger Button */
+.ad-btn--danger {
+  background: var(--ad-danger);
+  border-color: transparent;
+  color: #fff;
+}
+
+.ad-btn--danger:hover:not(:disabled) {
+  background: linear-gradient(135deg, var(--ad-danger) 0%, #bb1f1f 100%);
+}
+
+/* Secondary Button (default) */
+.ad-btn--secondary {
+  background: var(--ad-bg-card);
+  border-color: var(--ad-border);
+  color: var(--ad-text);
+}
+
+.ad-btn--secondary:hover:not(:disabled) {
+  background: rgba(79, 70, 229, 0.04);
+  border-color: var(--ad-primary);
+}
+
+/* ============================================================================
+   BUTTON SIZES
+   ============================================================================ */
+
+.ad-btn--sm {
+  padding: 8px 12px;
+  font-size: 12px;
+}
+
+.ad-btn--md {
+  padding: 10px 14px;
+  font-size: var(--ad-text-sm);
+}
+
+.ad-btn--lg {
+  padding: 12px 18px;
+  font-size: var(--ad-text-sm);
+}
+
+/* ============================================================================
+   BUTTON ICONS
+   ============================================================================ */
+
+.ad-btn__icon {
+  width: 18px;
+  height: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ============================================================================
+   BUTTON LOADING STATE
+   ============================================================================ */
+
+.ad-btn__loading-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: adSpin 0.8s linear infinite;
+  display: inline-block;
+}
+
+.ad-btn--secondary .ad-btn__loading-spinner {
+  border-color: rgba(79, 70, 229, 0.3);
+  border-top-color: var(--ad-primary);
+}

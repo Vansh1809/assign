@@ -5,11 +5,20 @@ import Signup from './LoginSignup/Signup';
 import Login from './LoginSignup/Login';
 import Home from './LoginSignup/Home';
 import DashboardPage from './pages/DashboardPage.jsx'
+import UserDashboardPage from './pages/UserDashboardPage.jsx'
+import MapViewPage from './pages/MapViewPage.jsx'
 import GatewayRegistration from './pages/GatewayRegistration';
 import DeviceBadgesPage from './pages/DeviceBadgesPage';
 import AdminUsersPage from './pages/AdminUsersPage.jsx'
 import AdminRoute from './routes/AdminRoute.jsx'
 import EmailTemplatesAdminPage from './pages/EmailTemplatesAdminPage.jsx'
+import AdminRolesPage from './pages/AdminRolesPage.jsx'
+import RolePermissionsPage from './pages/RolePermissionsPage.jsx'
+
+// Import unified design system
+import './styles/theme.css';
+import './styles/utilities.css';
+
 
 
 // ✨ Protected Route Component (auth)
@@ -42,8 +51,26 @@ function App() {
           <Route
             path='/dashboard'
             element={
-              <ProtectedRoute>
+              <AdminRoute>
                 <DashboardPage />
+              </AdminRoute>
+            }
+          />
+
+          <Route
+            path='/user-dashboard'
+            element={
+              <ProtectedRoute>
+                <UserDashboardPage />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path='/map-view'
+            element={
+              <ProtectedRoute>
+                <MapViewPage />
               </ProtectedRoute>
             }
           />
@@ -58,6 +85,25 @@ function App() {
             }
           />
 
+          {/* Protected Admin Roles/Permissions Routes */}
+          <Route
+            path='/admin/roles'
+            element={
+              <AdminRoute>
+                <AdminRolesPage />
+              </AdminRoute>
+            }
+          />
+
+          <Route
+            path='/admin/role-permissions'
+            element={
+              <AdminRoute>
+                <RolePermissionsPage />
+              </AdminRoute>
+            }
+          />
+
           <Route
             path='/admin/email'
             element={
@@ -66,6 +112,7 @@ function App() {
               </AdminRoute>
             }
           />
+
 
 
           {/* Protected Gateway Registration Route */}

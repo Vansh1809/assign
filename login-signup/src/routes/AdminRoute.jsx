@@ -8,9 +8,8 @@ export default function AdminRoute({ children }) {
   if (!user) return <Navigate to="/login" replace />;
 
   const roleName = user?.role?.name || user?.role || null;
-
-  if (roleName !== 'Admin') return <Navigate to="/dashboard" replace />;
+  const allowedRoles = ['admin', 'super admin'];
+  if (!allowedRoles.includes((roleName || '').toLowerCase())) return <Navigate to="/user-dashboard" replace />;
 
   return children;
 }
-

@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useAuth } from "../AuthContext";
 
 const deviceOptions = [
   {
@@ -60,6 +61,7 @@ function loadDrafts() {
 export default function DeviceBadgesPage() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { user } = useAuth();
   const gateway = location.state?.gateway || {};
 
   const [device, setDevice] = useState(emptyDevice);
@@ -67,6 +69,8 @@ export default function DeviceBadgesPage() {
   const [message, setMessage] = useState("");
 
   const gatewayLabel = gateway.gatewayId || "Select a gateway first";
+  const roleName = user?.role?.name || user?.role || "";
+  const homeRoute = roleName.toLowerCase() === "admin" ? "/dashboard" : "/user-dashboard";
   const selectedDeviceOption =
     deviceOptions.find((option) => option.value === device.type) || deviceOptions[0];
 
@@ -144,6 +148,12 @@ export default function DeviceBadgesPage() {
           </p>
         </div>
         <div style={styles.headerActions}>
+          <button style={styles.secondaryBtn} onClick={() => navigate(homeRoute)}>
+            Dashboard
+          </button>
+          <button style={styles.secondaryBtn} onClick={() => navigate("/map-view")}>
+            Map View
+          </button>
           <button style={styles.secondaryBtn} onClick={() => navigate("/register-gateway")}>
             Back to Gateway
           </button>
@@ -298,9 +308,9 @@ export default function DeviceBadgesPage() {
 const styles = {
   root: {
     minHeight: "100vh",
-    background: "#0f172a",
-    color: "#e2e8f0",
-    fontFamily: "'Segoe UI', system-ui, sans-serif",
+    background: "#f8f9fc",
+    color: "#5a5c69",
+    fontFamily: "'Nunito', 'Segoe UI', system-ui, sans-serif",
     padding: 24,
     boxSizing: "border-box",
   },
@@ -313,7 +323,7 @@ const styles = {
   },
   eyebrow: {
     margin: 0,
-    color: "#38bdf8",
+    color: "#4e73df",
     fontSize: 12,
     fontWeight: 700,
     letterSpacing: "0.08em",
@@ -321,14 +331,14 @@ const styles = {
   },
   title: {
     margin: "6px 0",
-    color: "#f8fafc",
+    color: "#5a5c69",
     fontSize: 30,
     lineHeight: 1.1,
   },
   subTitle: {
     margin: 0,
     maxWidth: 620,
-    color: "#94a3b8",
+    color: "#858796",
     fontSize: 14,
     lineHeight: 1.5,
   },
@@ -338,18 +348,18 @@ const styles = {
     flexWrap: "wrap",
   },
   primaryBtn: {
-    background: "#22c55e",
+    background: "#4e73df",
     border: "none",
-    color: "#052e16",
+    color: "#fff",
     fontWeight: 800,
     padding: "10px 14px",
     borderRadius: 8,
     cursor: "pointer",
   },
   secondaryBtn: {
-    background: "#1e293b",
-    border: "1px solid #334155",
-    color: "#e2e8f0",
+    background: "#fff",
+    border: "1px solid #d1d3e2",
+    color: "#5a5c69",
     fontWeight: 700,
     padding: "10px 14px",
     borderRadius: 8,
@@ -362,11 +372,12 @@ const styles = {
     alignItems: "start",
   },
   panel: {
-    background: "#1e293b",
-    border: "1px solid #334155",
+    background: "#fff",
+    border: "1px solid #e3e6f0",
     borderRadius: 8,
     padding: 18,
     minWidth: 0,
+    boxShadow: "0 2px 10px rgba(58, 59, 69, 0.12)",
   },
   panelHeader: {
     display: "flex",
@@ -377,17 +388,17 @@ const styles = {
   },
   panelTitle: {
     margin: 0,
-    color: "#f8fafc",
+    color: "#4e73df",
     fontSize: 18,
   },
   panelHint: {
     margin: "4px 0 0",
-    color: "#94a3b8",
+    color: "#858796",
     fontSize: 13,
   },
   badge: {
-    background: "#0ea5e9",
-    color: "#082f49",
+    background: "#4e73df",
+    color: "#fff",
     fontSize: 11,
     fontWeight: 800,
     borderRadius: 4,
@@ -400,11 +411,11 @@ const styles = {
     justifyContent: "flex-end",
   },
   notice: {
-    background: "#0f172a",
-    border: "1px solid #334155",
+    background: "#f8f9fc",
+    border: "1px solid #e3e6f0",
     borderRadius: 8,
     padding: "10px 12px",
-    color: "#bae6fd",
+    color: "#5a5c69",
     marginBottom: 14,
     fontSize: 13,
   },
@@ -417,7 +428,7 @@ const styles = {
     display: "flex",
     flexDirection: "column",
     gap: 6,
-    color: "#cbd5e1",
+    color: "#5a5c69",
     fontSize: 13,
     fontWeight: 700,
   },
@@ -426,42 +437,43 @@ const styles = {
     display: "flex",
     flexDirection: "column",
     gap: 6,
-    color: "#cbd5e1",
+    color: "#5a5c69",
     fontSize: 13,
     fontWeight: 700,
   },
   input: {
     width: "100%",
     boxSizing: "border-box",
-    background: "#0f172a",
-    border: "1px solid #334155",
+    background: "#fff",
+    border: "1px solid #d1d3e2",
     borderRadius: 8,
-    color: "#f8fafc",
+    color: "#5a5c69",
     padding: "10px 12px",
     fontSize: 14,
     outline: "none",
   },
   code: {
     margin: 0,
-    background: "#020617",
-    border: "1px solid #334155",
+    background: "#f8f9fc",
+    border: "1px solid #e3e6f0",
     borderRadius: 8,
     padding: 14,
-    color: "#c4b5fd",
+    color: "#4e73df",
     overflowX: "auto",
     fontSize: 12,
     lineHeight: 1.5,
   },
   draftsPanel: {
-    background: "#1e293b",
-    border: "1px solid #334155",
+    background: "#fff",
+    border: "1px solid #e3e6f0",
     borderRadius: 8,
     padding: 18,
     marginTop: 16,
+    boxShadow: "0 2px 10px rgba(58, 59, 69, 0.12)",
   },
   empty: {
     margin: 0,
-    color: "#94a3b8",
+    color: "#858796",
   },
   draftGrid: {
     display: "grid",
@@ -469,8 +481,8 @@ const styles = {
     gap: 12,
   },
   draftCard: {
-    background: "#0f172a",
-    border: "1px solid #334155",
+    background: "#f8f9fc",
+    border: "1px solid #e3e6f0",
     borderRadius: 8,
     padding: 14,
   },
@@ -481,12 +493,12 @@ const styles = {
     alignItems: "center",
   },
   draftMeta: {
-    color: "#94a3b8",
+    color: "#858796",
     fontSize: 13,
     margin: "8px 0",
   },
   draftMono: {
-    color: "#bae6fd",
+    color: "#4e73df",
     fontFamily: "Consolas, monospace",
     fontSize: 12,
     margin: 0,
@@ -494,8 +506,8 @@ const styles = {
   },
   removeBtn: {
     background: "transparent",
-    border: "1px solid #475569",
-    color: "#fca5a5",
+    border: "1px solid #d1d3e2",
+    color: "#e74a3b",
     borderRadius: 6,
     cursor: "pointer",
     padding: "5px 8px",

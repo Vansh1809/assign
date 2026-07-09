@@ -21,7 +21,7 @@ async function handlersSendEmail(payload) {
     templateData.resetLink = payload.resetLink;
   }
 
-  const { subject, text, html } = templates[templateType]
+const { subject, text, html } = templates[templateType]
     ? templates[templateType](templateData)
     : renderEmailTemplate(templateType, templateData);
 

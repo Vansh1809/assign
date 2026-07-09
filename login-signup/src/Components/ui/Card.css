@@ -1,0 +1,38 @@
+/* ============================================================================
+   CARD COMPONENT STYLES
+   ============================================================================ */
+
+.ad-card {
+  background: var(--ad-bg-card);
+  border: 1px solid var(--ad-border);
+  border-radius: var(--ad-radius-lg);
+  box-shadow: var(--ad-shadow-sm);
+  transition: var(--ad-transition);
+}
+
+.ad-card--hoverable:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--ad-shadow);
+  border-color: var(--ad-primary);
+}
+
+/* ============================================================================
+   CARD VARIANTS
+   ============================================================================ */
+
+.ad-card-header {
+  padding: var(--ad-space-lg);
+  border-bottom: 1px solid var(--ad-border);
+}
+
+.ad-card-body {
+  padding: var(--ad-space-lg);
+}
+
+.ad-card-footer {
+  padding: var(--ad-space-lg);
+  border-top: 1px solid var(--ad-border);
+  display: flex;
+  gap: var(--ad-space-md);
+  justify-content: flex-end;
+}
