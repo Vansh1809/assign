@@ -1,4 +1,5 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
+
 import AdminLayout from '../Components/AdminLayout';
 import { useAuth } from '../AuthContext';
 
@@ -84,15 +85,7 @@ function RoleToneChip({ tone, label }) {
   return <span className={`rp-chip rp-chip--${tone}`}> {label} </span>;
 }
 
-function Toggle({ checked, onChange, label }) {
-  return (
-    <label className="rp-toggle">
-      <input type="checkbox" checked={checked} onChange={(e) => onChange?.(e.target.checked)} />
-      <span className="rp-toggleTrack" aria-hidden="true" />
-      {label ? <span className="rp-toggleLabel">{label}</span> : null}
-    </label>
-  );
-}
+
 
 function Toasts({ toasts }) {
   return (
@@ -126,7 +119,7 @@ export default function RolePermissionsPage() {
   // Search/filter/sort/table
   const [roleQuery, setRoleQuery] = useState('');
   const [filterPermissionType, setFilterPermissionType] = useState('all');
-  const [sortBy, setSortBy] = useState('updated'); // updated | permissions
+
 
   // Track original permissions to disable/enable Save.
   const [originalPermissions, setOriginalPermissions] = useState([]);
@@ -181,16 +174,7 @@ export default function RolePermissionsPage() {
     });
   };
 
-  const setCategoryPermissions = (categoryPermissions, enable) => {
-    setDraftPermissions((prev) => {
-      const set = new Set(prev);
-      for (const p of categoryPermissions) {
-        if (enable) set.add(p);
-        else set.delete(p);
-      }
-      return Array.from(set);
-    });
-  };
+
 
   const selectAllVisible = (enable) => {
     setDraftPermissions((prev) => {
@@ -431,85 +415,9 @@ export default function RolePermissionsPage() {
     setDeleteOpen(true);
   };
 
-  const renderRoleCard = (role) => {
-    const roleName = role.name || '';
-    const meta = roleVisualMeta(roleName);
 
-    const usersAssigned = computeUsersAssigned(roleName);
-    const isSystem = role.isSystemRole === true || systemRoleNames.has(roleName);
 
-    const permsCount = Array.isArray(role.permissions) ? role.permissions.length : 0;
-    const selected = role.id === selectedRoleId || role._id === selectedRoleId;
 
-    return (
-      <button
-        key={role.id || role._id}
-        type="button"
-        className={`rp-card ${selected ? 'rp-card--selected' : ''}`}
-        onClick={() => setSelectedRoleId(role.id || role._id)}
-      >
-        <div className="rp-cardTop">
-          <div className="rp-cardTitleRow">
-            <div className="rp-cardTitle">{roleName || 'Untitled Role'}</div>
-            {isSystem ? <RoleToneChip tone="slate" label="System" /> : meta ? <RoleToneChip tone={meta.tone} label={meta.badge} /> : null}
-          </div>
-          <div className="rp-cardDesc">{meta?.description || 'Role permissions and access level'}</div>
-        </div>
-
-        <div className="rp-cardStats">
-          <div className="rp-stat">
-            <div className="rp-statValue">{usersAssigned}</div>
-            <div className="rp-statLabel">Users</div>
-          </div>
-          <div className="rp-stat">
-            <div className="rp-statValue">{permsCount}</div>
-            <div className="rp-statLabel">Permissions</div>
-          </div>
-        </div>
-
-        <div className="rp-cardSummary">
-          <div className="rp-summaryLabel">Permission summary</div>
-          <div className="rp-summaryText">
-            {(Array.isArray(role.permissions) ? role.permissions : []).slice(0, 3).join(', ')}
-            {Array.isArray(role.permissions) && role.permissions.length > 3 ? ' …' : ''}
-          </div>
-        </div>
-
-        <div className="rp-cardActions" onClick={(e) => e.stopPropagation()}>
-          <Button variant="secondary" onClick={() => openEdit(role)} size="sm">
-            Edit
-          </Button>
-          <Button
-            variant="danger"
-            onClick={() => {
-              if (isSystem) return;
-              openDelete(role);
-            }}
-            disabled={isSystem}
-            size="sm"
-          >
-            Delete
-          </Button>
-        </div>
-      </button>
-    );
-  };
-
-  // Sync permission draft select-all state per category
-  const categorySelectAllState = useMemo(() => {
-    const set = new Set(draftPermissions);
-    return effectiveCategories.reduce((acc, cat) => {
-      const total = cat.permissions.length;
-      const enabled = cat.permissions.filter((p) => set.has(p)).length;
-      acc[cat.key] = {
-        total,
-        enabled,
-        all: total > 0 && enabled === total,
-        none: enabled === 0,
-      };
-      return acc;
-    }, {});
-  }, [draftPermissions, effectiveCategories]);
 
 
 

@@ -22,8 +22,20 @@ const UserSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Role', // Role model se link karne ke liye
         required: true
+    },
+    // Admin UI status mapping: 'Active' | 'Inactive'
+    status: {
+        type: String,
+        enum: ['Active', 'Inactive'],
+        default: 'Active'
+    },
+    // Optional phone (UI requires phone field)
+    phone: {
+        type: String,
+        default: ''
     }
 }, { timestamps: true });
+
 
 // Sahi tarike se model ko export karna (Taki 'User.findOne is not a function' error na aaye)
 const User = mongoose.model('User', UserSchema);

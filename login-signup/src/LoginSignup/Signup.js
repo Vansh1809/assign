@@ -5,7 +5,8 @@ import Navbar from './Navbar';
 
 function Signup() {
   const navigate = useNavigate();
-  const { signup } = useAuth();
+  const {} = useAuth();
+
 
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const API_BASE = process.env.REACT_APP_API_BASE_URL || 'http://localhost:5000/api';
@@ -22,7 +23,7 @@ const strengthData = (password) => {
   return { label: 'Strong', color: '#3ddc97', width: '100%' };
 };
 
-const requirements = [
+  const requirements = [
   { label: 'At least 8 characters', validator: (pw) => pw.length >= 8 },
   { label: 'One uppercase letter', validator: (pw) => /[A-Z]/.test(pw) },
   { label: 'One number', validator: (pw) => /[0-9]/.test(pw) },
@@ -32,6 +33,7 @@ const requirements = [
 
 
   const [formData, setFormData] = useState({ 
+
     name: '', 
     email: '', 
     password: '', 
@@ -49,10 +51,8 @@ const requirements = [
 
   // Fetch roles on component mount
   useEffect(() => {
-    fetchRoles();
-  }, []);
+    const fetchRoles = async () => {
 
-  const fetchRoles = async () => {
     try {
       const response = await fetch(`${API_BASE}/roles`);
       if (response.ok) {
@@ -63,11 +63,14 @@ const requirements = [
       console.error('Error fetching roles:', err);
     }
   };
+    fetchRoles();
+  }, []);
 
   const passwordValidity = useMemo(
     () => requirements.map((field) => ({ ...field, valid: field.validator(formData.password) })),
-    [formData.password]
+    [formData.password, requirements]
   );
+
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });

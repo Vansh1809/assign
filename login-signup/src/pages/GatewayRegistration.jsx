@@ -33,7 +33,7 @@ function GatewayRegistration() {
   const [message, setMessage] = useState('');
 
   const roleName = user?.role?.name || user?.role || '';
-  const homeRoute = roleName.toLowerCase() === 'admin' ? '/dashboard' : '/user-dashboard';
+
 
   const goToDevices = (gatewayOverride = {}) => {
     navigate('/devices', {

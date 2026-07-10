@@ -516,9 +516,14 @@ const authRequired = async (req, res, next) => {
 
 // ================= ADMIN ROUTES =================
 const adminRoutes = require('./routes/adminRoutes');
+const usersRoutes = require('./routes/usersRoutes');
 
 // Mount RBAC/admin routes under /api/admin
 app.use('/api/admin', authRequired, adminRoutes);
+
+// User management CRUD endpoints (admin protected)
+app.use('/api', authRequired, usersRoutes);
+
 
 // Health-check endpoints for admin UI debugging without auth.
 // (They do NOT change permissions; they only allow the UI to render catalog/roles.)
